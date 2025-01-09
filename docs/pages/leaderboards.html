@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Behavior Modeling Leaderboard - WWW'25 AgentSociety Challenge</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">  <!-- 确保我们的样式在最后加载 -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet">
+    <style>
+        /* DataTables 样式 */
+        .dataTables_wrapper {
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        table.dataTable {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100% !important;
+        }
+
+        table.dataTable thead th {
+            background: linear-gradient(180deg, #f8f9fa, #e9ecef);
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 15px 12px;
+            position: relative;
+        }
+
+        table.dataTable thead th:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #007bff, #00ff88);
+            opacity: 0.5;
+        }
+
+        table.dataTable tbody td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table.dataTable tbody tr:nth-child(even) {
+            background-color: #f8faff;
+        }
+
+        /* 团队名称列样式 */
+        .team-name {
+            font-weight: 600;
+            color: #2c3e50;
+            background: linear-gradient(90deg, rgba(0, 123, 255, 0.05), transparent);
+            border-left: 3px solid #007bff;
+        }
+
+        /* 数值列样式 */
+        .error-value {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            background: rgba(0, 123, 255, 0.03);
+        }
+
+        /* 提交时间列样式 */
+        .submission-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* 表头图标样式 */
+        .header-icon {
+            margin-right: 8px;
+            font-size: 1.2em;
+            vertical-align: middle;
+            opacity: 0.8;
+        }
+
+        /* DataTables 功能样式 */
+        .dataTables_filter input {
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            margin-left: 10px;
+            width: 200px;
+        }
+
+        .dataTables_length select {
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            margin: 0 5px;
+        }
+
+        .dataTables_paginate {
+            margin-top: 20px;
+        }
+
+        .dataTables_paginate .paginate_button {
+            padding: 8px 14px;
+            margin: 0 3px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: white;
+            color: #495057 !important;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dataTables_paginate .paginate_button.current {
+            background: linear-gradient(45deg, #007bff, #00ff88) !important;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+            color: white !important;
+        }
+
+        .dataTables_paginate .paginate_button:hover:not(.current) {
+            background: #e9ecef !important;
+            border-color: #dee2e6;
+            color: #212529 !important;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .dataTables_wrapper {
+                padding: 15px;
+            }
+            
+            table.dataTable thead th,
+            table.dataTable tbody td {
+                padding: 10px 5px;
+                font-size: 0.9em;
+            }
+        }
+        
+        .hr-value {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            background: rgba(0, 123, 255, 0.03);
+        }
+
+        /* 标题样式 */
+        .behavior-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid;
+            border-image: linear-gradient(to right, #007bff, #00ff88) 1;
+            display: inline-block;
+        }
+
+        /* 调整表格容器样式 */
+        .section {
+            padding: 2rem;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        /* 调整表格宽度 */
+        .dataTables_wrapper {
+            max-width: 100%;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        /* 确保表格不会超出容器 */
+        table.dataTable {
+            width: 100% !important;
+            margin: 0 !important;
+        }
+
+        /* 优化表格在小屏幕上的显示 */
+        @media (max-width: 1200px) {
+            .behavior-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .behavior-title {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+        }
+
+        /* 标题样式 */
+        .recommendation-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid;
+            border-image: linear-gradient(to right, #007bff, #00ff88) 1;
+            display: inline-block;
+        }
+
+        /* 调整表格容器样式 */
+        .section {
+            padding: 2rem;
+            width: 95%;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+
+        /* DataTables 顶部控件样式 */
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter {
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+
+        /* Show entries 样式 */
+        .dataTables_length {
+            float: left;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            color: #495057;
+        }
+
+        .dataTables_length select {
+            padding: 8px 12px;
+            margin: 0 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background-color: white;
+            color: #495057;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        /* 搜索框样式 */
+        .dataTables_filter {
+            float: right;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            color: #495057;
+        }
+
+        .dataTables_filter input {
+            padding: 8px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            margin-left: 12px;
+            width: 250px;
+            background-color: white;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .dataTables_filter input:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        /* 清除浮动 */
+        .dataTables_wrapper::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+
+        /* 调整表格上方空间 */
+        .dataTables_wrapper {
+            padding: 25px 35px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        /* 优化表格在小屏幕上的显示 */
+        @media (max-width: 1200px) {
+            .behavior-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .behavior-title {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+        }
+
+        .contact-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(to right, #1a237e, #283593);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-info span {
+            white-space: nowrap;
+        }
+
+        .contact-info a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-info a:hover {
+            color: #90caf9;
+            text-decoration: underline;
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(45deg, #007bff, #00ff88);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+
+        .leaderboard-content {
+            display: block;
+        }
+
+        .leaderboard-content.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <img src="../assets/images/ASC.jpg" alt="Logo">
+            <h1>AgentSociety Challenge @ WWW 2025</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="modeling-track.html">User Modeling Track</a></li>
+            <li><a href="recommendation-track.html">Recommendation Track</a></li>
+            <li><a href="leaderboards.html">Leaderboards</a></li>
+            <li><a href="submission-guidelines.html">Submission Guidelines</a></li>
+            <li><a href="discussion.html">Discussion Forum</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <section class="section">
+            <!-- 添加标签切换按钮 -->
+            <div class="leaderboard-tabs">
+                <button class="tab-button active" data-tab="modeling">User Modeling Track</button>
+                <button class="tab-button" data-tab="recommendation">Recommendation Track</button>
+            </div>
+
+            <!-- User Modeling Leaderboard -->
+            <div class="leaderboard-content" id="modeling-leaderboard">
+                <h1>🏆 User Modeling Track Leaderboard</h1>
+                <table id="modeling-table" class="display responsive nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>🏕️ Team Name</th>
+                            <th>⏰ Submission Time</th>
+                            <th>⭐ Preference Estimation</th>
+                            <th>📝 Review Generation</th>
+                            <th>📊 Overall Quality</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <!-- Recommendation Leaderboard -->
+            <div class="leaderboard-content hidden" id="recommendation-leaderboard">
+                <h1>🏆 Recommendation Track Leaderboard</h1>
+                <table id="recommendation-table" class="display responsive nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>🏕️ Team Name</th>
+                            <th>⏰ Submission Time</th>
+                            <th>🎯 Top-1 Hit Rate</th>
+                            <th>🎯 Top-3 Hit Rate</th>
+                            <th>🎯 Top-5 Hit Rate</th>
+                            <th>🏆 Avg Hit Rate</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 初始化两个表格
+            const modelingTable = $('#modeling-table').DataTable({
+                ajax: {
+                    url: '../assets/data/behavior_leaderboard.csv',
+                    dataType: 'text',
+                    dataSrc: function(csvData) {
+                        return $.csv.toObjects(csvData);
+                    }
+                },
+                columns: [
+                    { data: 'Team name', className: 'team-name' },
+                    { data: 'Submission Time', className: 'submission-time' },
+                    { data: 'Preference Estimation', className: 'error-value', render: function(data) { return parseFloat(data).toFixed(4); } },
+                    { data: 'Review Generation', className: 'error-value', render: function(data) { return parseFloat(data).toFixed(4); } },
+                    { data: 'Overall Quality', className: 'error-value', render: function(data) { return parseFloat(data).toFixed(4); } }
+                ],
+                order: [[4, 'desc']],
+                pageLength: 10,
+                responsive: false
+            });
+
+            const recommendationTable = $('#recommendation-table').DataTable({
+                ajax: {
+                    url: '../assets/data/recommendation_leaderboard.csv',
+                    dataType: 'text',
+                    dataSrc: function(csvData) {
+                        return $.csv.toObjects(csvData);
+                    }
+                },
+                columns: [
+                    { data: 'Team name', className: 'team-name' },
+                    { data: 'Submission Time', className: 'submission-time' },
+                    { data: 'Top-1 hr', className: 'hr-value', render: function(data) { return parseFloat(data).toFixed(4); } },
+                    { data: 'Top-3 hr', className: 'hr-value', render: function(data) { return parseFloat(data).toFixed(4); } },
+                    { data: 'Top-5 hr', className: 'hr-value', render: function(data) { return parseFloat(data).toFixed(4); } },
+                    { data: 'Overall hr', className: 'hr-value', render: function(data) { return parseFloat(data).toFixed(4); } }
+                ],
+                order: [[5, 'desc']],
+                pageLength: 10,
+                responsive: false
+            });
+
+            // 标签切换功能
+            $('.tab-button').click(function() {
+                const tabId = $(this).data('tab');
+                
+                // 更新按钮状态
+                $('.tab-button').removeClass('active');
+                $(this).addClass('active');
+                
+                // 更新内容显示
+                $('.leaderboard-content').addClass('hidden');
+                $(`#${tabId}-leaderboard`).removeClass('hidden');
+                
+                // 重新计算表格列宽
+                if(tabId === 'modeling') {
+                    modelingTable.columns.adjust();
+                } else {
+                    recommendationTable.columns.adjust();
+                }
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.min.js"></script>
+    <script>
+        // 获取当前页面的文件名
+        const currentPage = window.location.pathname.split('/').pop();
+        
+        // 移除所有导航链接的active类
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.classList.remove('active');
+            link.removeAttribute('aria-current');
+        });
+        
+        // 为当前页面的导航链接添加active类
+        document.querySelector(`.nav-links a[href="${currentPage}"]`)?.classList.add('active');
+        document.querySelector(`.nav-links a[href="${currentPage}"]`)?.setAttribute('aria-current', 'page');
+    </script>
+</body>
+</html> 

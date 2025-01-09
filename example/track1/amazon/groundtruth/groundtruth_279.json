@@ -1,0 +1,4 @@
+{
+  "stars": 3.0,
+  "review": "The CHENBO BMP280 pressure sensor is a decent product for its price, but it falls short in a few areas. While it is accurate and reliable, it requires external components like pull-up resistors to function properly, which can be a hassle. Additionally, the need to adjust the I2C address for certain applications adds an extra layer of complexity. Despite these issues, the sensor works well once set up, but it's not as plug-and-play as I would have liked. If you need temperature measurement along with pressure, consider the BME280 instead."
+}

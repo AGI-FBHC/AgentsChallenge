@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendation Track - WWW'25 AgentSociety Challenge</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        /* 二级标题样式 */
+        .section h2 {
+            color: #34495e;
+            font-size: 1.8em;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            position: relative;
+        }
+
+        .section h2:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, #007bff, #00ff88);
+        }
+
+        /* 三级标题样式 */
+        .section h3 {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin: 25px 0 15px;
+            padding-left: 15px;
+            border-left: 4px solid #007bff;
+        }
+
+        /* 链接样式 */
+        .section a {
+            color: #007bff;
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .section a:hover {
+            color: #0056b3;
+        }
+
+        .section a:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: #0056b3;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .section a:hover:after {
+            transform: scaleX(1);
+        }
+
+        /* 列表样式 */
+        .section ul, .section ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .section ul li, .section ol li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .section ul {
+            list-style: none;
+        }
+
+        .section ul li:before {
+            content: '•';
+            color: #007bff;
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        } 
+
+        /* 提交按钮样式 */
+        .submit-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(to right, #007bff, #00ff88);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .submit-button:hover {
+            transform: scale(1.05);
+        }
+
+        .contact-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(to right, #1a237e, #283593);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-info span {
+            white-space: nowrap;
+        }
+
+        .contact-info a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-info a:hover {
+            color: #90caf9;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <button class="submit-button" onclick="window.open('https://forms.gle/XwWbGBQZcVZp7oMr9', '_blank')">
+        Submit
+    </button>
+
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <img src="../assets/images/ASC.jpg" alt="Logo">
+            <h1>AgentSociety Challenge @ WWW 2025</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="modeling-track.html">User Modeling Track</a></li>
+            <li><a href="recommendation-track.html">Recommendation Track</a></li>
+            <li><a href="leaderboards.html">Leaderboards</a></li>
+            <li><a href="submission-guidelines.html">Submission Guidelines</a></li>
+            <li><a href="discussion.html">Discussion Forum</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <section class="section" id="content">
+            <div class="recommendation-track">
+                <h1>💡 Recommendation Track</h1>
+
+                <h2>Introduction</h2>
+                <p>
+                    This track focuses on developing LLM agents that serve as recommendation assistants, capable of generating personalized recommendations for targeted users. The task leverages large-scale, open-source datasets, including data from Yelp, Goodreads, and Amazon, to provide rich user-item interaction data and diverse recommendation scenarios. Participants are expected to design recommendation agents set up in an interactive online platform simulator, which integrates tools for retrieving user information, item details, and existing reviews.
+                </p>
+
+                <h3>Task Inputs:</h3>
+                <ul>
+                    <li><b>User ID:</b> Identifies the specific user for whom the recommendation is being generated.</li>
+                    <li><b>Candidate Item List:</b> A list of items available for recommendation.</li>
+                </ul>
+
+                <h3>Task Outputs:</h3>
+                <ul>
+                    <li><b>Ranked Recommendation List:</b> A prioritized list of items tailored to the user's preferences.</li>
+                </ul>
+
+                <p>
+                    This track aims to advance the design of LLM agents for recommendation tasks, exploring their potential to enhance personalization, effectively model user preferences, and shape next-generation recommendation systems.
+                </p>
+
+                <h2>Evaluation</h2>
+                <p>
+                    Participants' recommendation agents will be evaluated based on their ability to accurately rank items that users are most likely to select from a list of candidates. 
+                    During the Development phase, we provide simulation data for development and evaluation. The ground truth for each task is generated by a predefined LLM agent simulating user choices based on context and task queries.
+                    After selecting the Top 20 teams to enter the Final Phase, the evaluation results will be calculated based on 40% simulation data and 60% real data.
+                </p>
+
+                <h3>Ranking Accuracy</h3>
+                <ul>
+                    <li><b>Metric:</b> Top-N Hit Rate (where N = {1, 3, 5})</li>
+                    <li><b>Description:</b> Measures how often the ground truth item appears in the top-N of the ranked list of 20 candidate items.</li>
+                    <li><b>Formula:</b></li>
+                </ul>
+                <p>
+                    <pre>
+                    HR@N = (1 / T) * Σ 𝟙(p_t ∈ P_t_hat(N))
+                    </pre>
+                    where <i>T</i> is the total number of test tasks, and 𝟙(·) is an indicator function that equals 1 if the ground truth <i>p_t</i> is in the top N recommendations <i>P_t_hat(N)</i> in the ranked list <i>P_t_hat</i>, and 0 otherwise. Similar evaluation methods have been used in [1][2].
+                </p>
+
+                <h3>References</h3>
+                <ol>
+                    <li>Wang, Yancheng, et al. "RecMind: Large Language Model Powered Agent For Recommendation." <i>Findings of the Association for Computational Linguistics: NAACL 2024</i>, 2024.</li>
+                    <li>Kim, Sein, et al. "Large language models meet collaborative filtering: An efficient all-round LLM-based recommender system." <i>Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining</i>, 2024.</li>
+                </ol>
+              
+                <p>
+                  Checkout <a href="https://github.com/tsinghua-fib-lab/WebSocietySimulator/blob/main/websocietysimulator/tools/evaluation_tool.py" target="_blank">Recommendation Evaluation</a> for more calculation details.
+                </p>
+              </div>              
+        </section>
+    </main>
+
+    <script>
+        // 获取当前页面的文件名
+        const currentPage = window.location.pathname.split('/').pop();
+        
+        // 移除所有导航链接的active类
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.classList.remove('active');
+            link.removeAttribute('aria-current');
+        });
+        
+        // 为当前页面的导航链接添加active类
+        document.querySelector(`.nav-links a[href="${currentPage}"]`)?.classList.add('active');
+        document.querySelector(`.nav-links a[href="${currentPage}"]`)?.setAttribute('aria-current', 'page');
+    </script>
+</body>
+</html> 

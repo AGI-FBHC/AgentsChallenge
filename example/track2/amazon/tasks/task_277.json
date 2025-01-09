@@ -1,0 +1,31 @@
+{
+  "type": "recommendation",
+  "user_id": "AFON76K6CRHCA5EGH2FFYWRFUAMQ",
+  "candidate_category": "product",
+  "candidate_list": [
+    "B001EYUXO4",
+    "B00OKY2NWU",
+    "B0B4SNXTBD",
+    "B005SGA8DU",
+    "B08VW13HZ1",
+    "B09WNCSDDZ",
+    "B0CHMQ9H9Q",
+    "B08224L3SQ",
+    "B00EW5I30I",
+    "B004O7BALI",
+    "B00CP6LZIS",
+    "B0C7KMTKCZ",
+    "B07VRD1TT1",
+    "B004RV4SFG",
+    "B0055215GG",
+    "B00M5DW03U",
+    "B08RJ39HPL",
+    "B0009PUCPY",
+    "B09H1432RP",
+    "B00JB4KG6E"
+  ],
+  "loc": [
+    -1,
+    -1
+  ]
+}

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rules - WWW'25 AgentSociety Challenge</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* 二级标题样式 */
+        .section h2 {
+            color: #34495e;
+            font-size: 1.8em;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            position: relative;
+        }
+
+        .section h2:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, #007bff, #00ff88);
+        }
+
+        /* 三级标题样式 */
+        .section h3 {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin: 25px 0 15px;
+            padding-left: 15px;
+            border-left: 4px solid #007bff;
+        }
+
+        /* 链接样式 */
+        .section a {
+            color: #007bff;
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .section a:hover {
+            color: #0056b3;
+        }
+
+        .section a:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: #0056b3;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .section a:hover:after {
+            transform: scaleX(1);
+        }
+
+        /* 列表样式 */
+        .section ul, .section ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .section ul li, .section ol li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .section ul {
+            list-style: none;
+        }
+
+        .section ul li:before {
+            content: '•';
+            color: #007bff;
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        } 
+
+        /* 提交按钮样式 */
+        .submit-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(to right, #007bff, #00ff88);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .submit-button:hover {
+            transform: scale(1.05);
+        }
+
+        .contact-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(to right, #1a237e, #283593);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-info span {
+            white-space: nowrap;
+        }
+
+        .contact-info a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-info a:hover {
+            color: #90caf9;
+            text-decoration: underline;
+        }
+
+        .announcement-banner {
+            background-color: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ffeeba;
+            margin: 20px;
+        }
+
+        .announcement-banner h3 {
+            color: #856404;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .announcement-banner ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .announcement-banner li {
+            margin-bottom: 15px;
+        }
+
+        .announcement-banner li:last-child {
+            margin-bottom: 0;
+        }
+
+        .params-table {
+            width: 100%;
+            margin: 10px 0;
+            border-collapse: collapse;
+        }
+
+        .params-table th, .params-table td {
+            padding: 8px;
+            border: 1px solid #000000;
+            text-align: center;
+        }
+
+        .params-table th {
+            background-color: #d1d1d1;
+        }
+    </style>
+</head>
+<body>
+    <button class="submit-button" onclick="window.open('https://forms.gle/XwWbGBQZcVZp7oMr9', '_blank')">
+        Submit
+    </button>
+
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <img src="../assets/images/ASC.jpg" alt="Logo">
+            <h1>AgentSociety Challenge @ WWW 2025</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="modeling-track.html">User Modeling Track</a></li>
+            <li><a href="recommendation-track.html">Recommendation Track</a></li>
+            <li><a href="leaderboards.html">Leaderboards</a></li>
+            <li><a href="submission-guidelines.html">Submission Guidelines</a></li>
+            <li><a href="discussion.html">Discussion Forum</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <section class="section" id="content">
+            <h1>📚 Submission Guidelines</h1>
+
+            <h2>Submission Rules</h2>
+            <ol>
+                <li>
+                    teams should devise LLM agentic workflows within the predefined modular design space, including:
+                    <ul>
+                        <li><strong>Module Recombination:</strong> Designing novel agents by recombining the classic modules (reasoning, planning, tool use, and memory). <a href="https://github.com/tsinghua-fib-lab/AgentSocietyChallenge/blob/main/tutorials/agent_development.md" target="_blank">Tutorial</a></li>
+                        <li><strong>Module Design:</strong> Developing or modifying modules to implement new functionalities while ensuring compatibility with the standardized framework.</li>
+                        <li><strong>Workflow Construction:</strong> Designing the overall structure and interaction flow of the agentic system to effectively integrate the modules and achieve the desired outcomes.</li>
+                    </ul>
+                </li>
+                <li>
+                    We will use <strong>Qwen2.5-72B-instruct</strong> for evaluating the submitted agents. The use of external models, training of external models, or utilization of external tools is strictly prohibited.
+                </li>
+                <li>
+                    During the evaluation of submitted agents, all data access must go through the interaction tools provided by the textual web simulator.
+                </li>
+                <li>
+                    External data access is prohibited.
+                </li>
+                <li>
+                    Submission limits:
+                    <ul>
+                        <li><strong>Development Phase:</strong> Each team may submit up to <strong>one submission per day</strong>.</li>
+                        <li><strong>Evaluation Phase:</strong> Each team may submit up to <strong>three submissions per day</strong>.</li>
+                    </ul>
+                </li>
+                <li>Evaluation will be <strong>time- and token-limited</strong>.</li>
+                <li>Any form of dishonest conduct is strictly prohibited and will result in <strong>immediate disqualification</strong> if detected.</li>
+            </ol>
+
+            <div class="announcement-banner">
+                <h3>❗️ Important Evaluation Parameters</h3>
+                <ul>
+                    <li><strong>Rate Limits:</strong>
+                        RPM=300, TPM=180000 (applies to all phases)
+                    </li>
+                    <li><strong>Task Parallelism Settings:</strong>
+                        <table class="params-table">
+                            <tr>
+                                <th>Phase</th>
+                                <th>Official Evaluation</th>
+                                <th>With Supported API Key</th>
+                            </tr>
+                            <tr>
+                                <td>Development</td>
+                                <td>10 tasks</td>
+                                <td>4 tasks</td>
+                            </tr>
+                            <tr>
+                                <td>Final</td>
+                                <td>5 tasks</td>
+                                <td>2 tasks</td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li>Please make sure your agent can pass the evaluation.</li>
+                    <li><strong>Note:</strong> Task parallelism refers to concurrent task handling and is controlled by 
+                        <code>max_workers</code> in <code>simulator.run_simulation</code>
+                    </li>
+                </ul>
+            </div>
+
+            <hr>
+
+            <h2>Submit Your Agent</h2>
+            <p>
+                Submit your solution through the submission button in the top right corner.
+            </p>
+            <p>
+                <ul>
+                    <li>Please register your team first. <a href="https://forms.gle/wisLykLK8eGB2X1PA" target="_blank">Registration</a></li>
+                    <li>Please carefully <strong>SELECT the TRACK</strong> you want to submit to.</li>
+                    <li><strong>The content of your submission should be a zip file containing your agent (Only one <code>{your_agent}.py</code> file without evaluation code).</strong></li>
+                    <li>Example submissions:
+                        <ul>
+                            <li>For Track 1: <a href="https://github.com/tsinghua-fib-lab/AgentSocietyChallenge/blob/main/example/trackOneSubmission_example.zip" target="_blank">submission_1</a></li>
+                            <li>For Track 2: Coming Soon.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </p>
+
+            <h2>Fairness Mechanisms</h2>
+            <ol>
+                <li>
+                    <strong>Public Leaderboard:</strong> We will provide a public leaderboard for all teams to monitor and review performance.
+                </li>
+                <li>
+                    <strong>Rigorous Review:</strong> Submissions will undergo a thorough review to ensure compliance with competition rules and the integrity of results.
+                </li>
+                <li>
+                    <strong>Equal Access to Resources:</strong> We will ensure all teams have access to sufficient and fair computational resources.
+                </li>
+            </ol>
+        </section>
+    </main>
+
+    <script>
+        // 获取当前页面的文件名
+        const currentPage = window.location.pathname.split('/').pop();
+        
+        // 移除所有导航链接的active类
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.classList.remove('active');
+            link.removeAttribute('aria-current');
+        });
+        
+        // 为当前页面的导航链接添加active类
+        document.querySelector(`.nav-links a[href="${currentPage}"]`)?.classList.add('active');
+        document.querySelector(`.nav-links a[href="${currentPage}"]`)?.setAttribute('aria-current', 'page');
+    </script>
+</body>
+</html> 

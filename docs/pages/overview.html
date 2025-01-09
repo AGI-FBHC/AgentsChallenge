@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overview - WWW'25 AgentSociety Challenge</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            position: relative;
+            margin: 2% auto;
+            width: 80%;
+            height: 90%;
+            background-color: #fff;
+            padding: 20px;
+        }
+
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .registration-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(to right, #007bff, #00ff88);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .registration-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 40%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+
+        .modal-content input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .modal-content button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .modal-content button:hover {
+            background-color: #0056b3;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 12px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        .modal-content h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .registration-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .submit-btn {
+            background-color: #4299e1;
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #3182ce;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            color: #a0aec0;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #4a5568;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .submit-btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .submit-btn.loading::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .team-count-display {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            color: #4a5568;
+            font-size: 14px;
+            padding: 5px 10px;
+            background-color: #f7fafc;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* 二级标题样式 */
+        .section h2 {
+            color: #34495e;
+            font-size: 1.8em;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            position: relative;
+        }
+
+        .section h2:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, #007bff, #00ff88);
+        }
+
+        /* 三级标题样式 */
+        .section h3 {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin: 25px 0 15px;
+            padding-left: 15px;
+            border-left: 4px solid #007bff;
+        }
+
+        /* 链接样式 */
+        .section a {
+            color: #007bff;
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .section a:hover {
+            color: #0056b3;
+        }
+
+        .section a:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: #0056b3;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .section a:hover:after {
+            transform: scaleX(1);
+        }
+
+        /* 列表样式 */
+        .section ul, .section ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .section ul li, .section ol li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .section ul {
+            list-style: none;
+        }
+
+        .section ul li:before {
+            content: '•';
+            color: #007bff;
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        }
+
+        .contact-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(to right, #1a237e, #283593);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-info span {
+            white-space: nowrap;
+        }
+
+        .contact-info a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-info a:hover {
+            color: #90caf9;
+            text-decoration: underline;
+        }
+
+        /* 提交按钮样式 */
+        .submit-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(to right, #007bff, #00ff88);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .submit-button:hover {
+            transform: scale(1.05);
+        }
+
+        .announcement-banner {
+            background-color: #fff3cd;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ffeeba;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .announcement-banner ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .announcement-banner li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .announcement-banner li:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <button class="submit-button" onclick="window.open('https://forms.gle/wisLykLK8eGB2X1PA', '_blank')">
+        Registration
+    </button>
+
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <img src="../assets/images/ASC.jpg" alt="Logo">
+            <h1>AgentSociety Challenge @ WWW 2025</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="modeling-track.html">User Modeling Track</a></li>
+            <li><a href="recommendation-track.html">Recommendation Track</a></li>
+            <li><a href="leaderboards.html">Leaderboards</a></li>
+            <li><a href="submission-guidelines.html">Submission Guidelines</a></li>
+            <li><a href="discussion.html">Discussion Forum</a></li>
+        </ul>
+    </nav>
+    
+    <div class="team-count-display" style="position: fixed; top: 80px; right: 20px; padding: 10px 20px; background: linear-gradient(to right, #007bff, #00ff88); color: white; border-radius: 5px; font-size: 16px; z-index: 999;">
+        Current Registered Teams: <span id="teamCount" style="font-weight: bold;">Loading...</span>
+    </div>
+
+    <!-- 注册信息收集 Modal -->
+    <div id="registrationFormModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRegistrationForm()">&times;</span>
+            <h2>Information Precheck for AgentSociety Challenge</h2>
+            <p style="color: #666; margin-bottom: 20px;">Please note: This form helps prevent duplicate registrations. The email address and team name will be checked against existing registrations.</p>
+            <form class="registration-form">
+                <div class="form-group">
+                    <label for="emailInput">Email Address</label>
+                    <input type="email" id="emailInput" required placeholder="Enter your email (will be checked for duplicates)">
+                </div>
+                <div class="form-group">
+                    <label for="teamNameInput">Team Name</label>
+                    <input type="text" id="teamNameInput" required placeholder="Enter unique team name">
+                    <small style="color: #666; display: block; margin-top: 5px;">Team name must be unique and cannot be changed later</small>
+                </div>
+                <div class="form-group">
+                    <label for="teamPasswordInput">Team Password</label>
+                    <input type="password" id="teamPasswordInput" required placeholder="Enter team password">
+                    <small style="color: #666; display: block; margin-top: 5px;">Keep this password safe - you'll need it for submissions</small>
+                </div>
+                <button type="button" class="submit-btn" id="submitBtn" onclick="preCheckRegistration()">Check Registration</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Google Form 弹窗 -->
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <iframe id="formFrame"
+                src=""
+                width="100%" height="95%" frameborder="0" marginheight="0" marginwidth="0">正在加载…</iframe>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <section class="section" id="content">
+            <h1>🌏 AgentSociety Challenge</h1>
+            <div class="announcement-banner">
+                <ul>
+                    <li>🚩 This challenge is a part of <a href="https://www2025.thewebconf.org/accepted-competitions" target="_blank">The Web Conference 2025.</a></li>
+                </ul>
+            </div>
+            <p>
+                We are excited to announce the AgentSociety Challenge, a competition for designing large language model (LLM) agents to advance web experience. 
+                As organizers, we recognize the crucial role online review platforms play in today's web society, serving as vital spaces for experience sharing, 
+                advice seeking, and social interaction. We have carefully designed two competitive tracks to explore the potential of LLM agents: the User Modeling Track,
+                which focuses on understanding user preferences and simulating online reviews, and the Recommendation Track, 
+                dedicated to delivering personalized recommendations across diverse scenarios. The Challenge utilizes large-scale public datasets from prominent online review platforms, 
+                complemented by a textual simulator to provide interactive feedback for LLM agents. Through this challenge, 
+                we aim to drive innovation and breakthrough in the integration of LLM technologies with real-world Web applications.
+            </p>
+
+            <h2>📍 Problem Statement</h2>
+            <p>
+                The participants are tasked to construct agentic workflows with LLM to process information, write reviews, and make recommendations 
+                by interacting with online review platforms. To facilitate this, we have built an interactive 
+                simulation environment that allows agents to engage with these platforms in a controlled setting.
+                The interactive environment is built based on open-source datasets, including Yelp<sup><a href="#yelp-dataset">[1]</a></sup>, 
+                Amazon<sup><a href="#amazon-dataset">[2]</a></sup>, and Goodreads<sup><a href="#goodreads-dataset">[3]</a></sup>, 
+                complemented by a textual simulator to provide interactive feedback for agents.
+                Specifically, this challenge consists of two tracks: 
+                <ul>
+                    <li><strong><a href="modeling-track.html">User Modeling Track</a></strong>: In this track, participants must design agents to simulate user reviews and star ratings, 
+                        focusing on simulating user behavior in specific scenarios by leveraging their historical actions and accessible environmental data. 
+                        By utilizing the text simulation environment, participants come up with new solutions to these problems in an interactive environment in agentic mode, 
+                        ensuring a comprehensive and diverse evaluation of user behaviors. </li>
+                    <li><strong><a href="recommendation-track.html">Recommendation Track</a></strong>: In this track, participants are tasked with using agents to generate rankings based on the current user's preferences, 
+                        which emphasizes building personalized recommendation assistants that provide users with appropriate suggestions tailored to particular contexts. </li>
+                </ul>
+            </p>
+            <p>
+                Based on the concept of modular agent design, participants are encouraged to adopt an actionable modular design space with four key modules: 
+                <strong>Planning</strong>, <strong>Reasoning</strong>, <strong>Tool use</strong>, and <strong>Memory</strong><sup><a href="#agentsquare">[4]</a></sup>. 
+                These modules have standardized interface to allow them cooperate with each other in a workflow: upon receiving a task query, the agent begins by decomposing it into sub-tasks through the Planning module. 
+                The Reasoning module then processes each sub-task, and when necessary, activates the Tool use module to select external tools for problem-solving. 
+                Additionally, the Memory module supports the reasoning process by accessing past observations and experiences, ensuring the agent continuously refines its actions based on feedback from the environment. 
+                Through this modular design approach, participants can not only create effective solutions for this challenge but also contribute reusable modules to the broader agent community, 
+                fostering innovation and collaboration in agent development.
+            </p> 
+
+            <div class="announcement-banner">
+                <ul>
+                    <li>💎 The Resource & Code base for agent development: <a href="https://github.com/tsinghua-fib-lab/WebSocietySimulator" target="_blank">Official Github.</a></li>
+                </ul>
+            </div>
+
+            <p>
+                As a bonus, the top-ranking teams advancing to the Final Phase will receive assistance in deploying their agents on the <strong>OpenCity platform</strong><sup><a href="#opencity">[5]</a></sup>. 
+                OpenCity is an open-source platform designed to simulate large-scale LLM agents within a digital city environment. 
+                Solutions submitted to the Recommendation and User Modeling tracks will be adapted to simulate offline movement and online reviews, 
+                respectively, offering a dynamic illustration of the Agent Society vision. Selected teams will be invited to present their work at the WWW Workshop, 
+                where they can compete for the Best Demo award.
+                <!-- <div style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+                    <div style="width: 80%; text-align: center;">
+                        <img src="../assets/images/large_scale_simulation.png" alt="Agent Simulation Example" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <p style="text-align: center; margin-top: 10px; color: #666;">Large-scale LLM Agents Simulation in OpenCity</p>
+                    </div>
+                </div> -->
+            </p>
+
+            <h2>📅 Timeline</h2>
+            <p>
+                The competition will be held from Jan 1st, 2025 to Feb 14th, 2025, following the timeline outlined below: 
+                <ul>
+                    <li><strong>Start of Development Phase:</strong> Jan 1st, 2025</li>
+                    <li><strong>Start of Final Phase:</strong> Feb 1st, 2025</li>
+                    <li><strong>Winner Notification and Paper Invitation:</strong> Feb 14th, 2025</li>
+                </ul>
+                Note: All submission deadlines are end-of-day in the Anywhere on Earth (AoE) time zone. Top 20 teams will be selected to participate in the Final Phase.
+            </p>
+
+            <h2 id="token-support">💪🏻 Token Support</h2>
+            <p>
+                To support participants, we will provide API-key access during the development phase. 
+                This will be offered through InfinigenceAI, with the following specifications: <strong>RPM=100, TPM=60000, RPD=10000</strong>, and the ability to call models such as Qwen-72b-instruct. 
+                If you wish to use the API, please send your identification documents via email. 
+                Required documents include your full name, organization, proof of participation in this competition, track of participation and any other relevant identification details. 
+                Once your verification is completed, we will send you the API key. Please note that the number of API keys is <strong>limited</strong>.
+            </p>
+
+            <h2>🏆 Award</h2>
+            <p>
+                The total prize pool is 12,000 USD. To encourage and reward excellence, 
+                the competition will offer monetary prizes and certificates to top-3 winning teams of each track:
+                <ul>
+                    <li>🥇 1st Place: 2,000 USD</li>
+                    <li>🥈 2nd Place: 1,000 USD</li>
+                    <li>🥉 3rd Place: 500 USD</li>
+                </ul>
+                Besides, challenge prizes also include the in-person <strong>travel grant</strong> for the top 2 winning teams each track. 
+                This remuneration is to be paid after the in-person presentation in our workshop the Web Conference:
+                <ul>
+                    <li>🥇 1st Place: 1,500 USD</li>
+                    <li>🥈 2nd Place: 1,000 USD</li>
+                </ul>
+                <strong>We will recommend 1st & 2nd place of each track to submit a competition-related papers for inclusion in the conference's companion proceedings.</strong>
+            </p>
+
+            <h2>🏪 Organizing Committee</h2>
+            <p>
+                <strong>Hosting Organization:</strong> <a href="https://fi.ee.tsinghua.edu.cn/" target="_blank">Tsinghua University</a>, <a href="https://cloud.infini-ai.com/" target="_blank">Infinigence AI</a>, <a href="https://www2025.thewebconf.org/" target="_blank">the Web Conference</a>
+            </p> <br>
+            <p>
+                <strong>Committee Members:</strong> Yuwei Yan (HKUST-gz); Yu Shang, Qingbing Zeng, Yu Li, Keyu Zhao, Zhiheng Zheng, Xuefei Ning (Tsinghua University); Tianji Wu, Shengen Yan (Infinigence AI)
+            </p> <br>
+            <p>
+                <strong>Committee Chair:</strong> Fengli Xu, Yu Wang, Yong Li (Tsinghua University)
+            </p>
+
+            <h2>📬 Contact</h2>
+            <p>
+                For any questions or inquiries, please contact us at <a href="mailto:LLMSociety-Challenge@outlook.com">LLMSociety-Challenge@outlook.com</a>.
+            </p>
+
+            <h2>📚 Reference</h2>
+            <ol>
+                <li id="yelp-dataset">
+                    Nabiha Asghar. 
+                    <strong>Yelp dataset challenge: Review rating prediction</strong>. 
+                    arXiv preprint arXiv:1605.05362, 2016. 
+                    <a href="https://arxiv.org/abs/1605.05362">[arXiv]</a>
+                </li>
+                <li id="amazon-dataset">
+                    Yupeng Hou, Jiacheng Li, Zhankui He, An Yan, Xiusi Chen, Julian McAuley. 
+                    <strong>Bridging Language and Items for Retrieval and Recommendation</strong>. 
+                    arXiv preprint arXiv:2403.03952, 2024.
+                    <a href="https://arxiv.org/abs/2403.03952">[arXiv]</a>
+                </li>
+                <li id="goodreads-dataset">
+                    Mengting Wan, Julian J. McAuley. 
+                    <strong>Item recommendation on monotonic behavior chains</strong>. 
+                    In <em>Proceedings of the 12th ACM Conference on Recommender Systems (RecSys 2018)</em>, 
+                    Vancouver, BC, Canada, October 2-7, 2018, pp. 86–94. ACM, 2018. 
+                    <a href="https://doi.org/10.1145/3240323.3240369">[DOI]</a>
+                </li>
+                <li id="agentsquare">
+                    Yu Shang, Yu Li, Keyu Zhao, Likai Ma, Jiahe Liu, Fengli Xu, Yong Li. 
+                    <strong>AgentSquare: Automatic LLM Agent Search in Modular Design Space</strong>. 
+                    arXiv preprint arXiv:2410.06153, 2024. 
+                    <a href="https://arxiv.org/abs/2410.06153">[arXiv]</a>.
+                </li>
+                <li id="opencity">
+                    Yuwei Yan, Qingbin Zeng, Zhiheng Zheng, Jingzhe Yuan, Jie Feng, Jun Zhang, Fengli Xu, Yong Li.  
+                    <strong>OpenCity: A Scalable Platform to Simulate Urban Activities with Massive LLM Agents</strong>.  
+                    arXiv preprint arXiv:2410.21286, 2024.  
+                    <a href="https://arxiv.org/abs/2410.21286">[arXiv]</a>.
+                </li>
+            </ol>
+        </section>
+    </main>
+
+    <script>
+        async function fetchTeamCount() {
+            try {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbxaS4QO9jiUs1fL0dzP2IN35_SnwBJCO2c4RqPdj3eegC6JMpQZd-J-cqvs21bQND7BaA/exec');
+                const data = await response.json();
+                document.getElementById('teamCount').textContent = data.count;
+            } catch (error) {
+                document.getElementById('teamCount').textContent = 'Network Error';
+            }
+        }
+
+        // 修改现有的页面加载事件
+        window.onload = function() {
+            fetchTeamCount();
+        };
+
+        // 每5分钟刷新一次计数
+        setInterval(fetchTeamCount, 300000);
+
+        // 页面导航激活状态切换
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.classList.remove('active');
+            link.removeAttribute('aria-current');
+        });
+        document.querySelector(`.nav-links a[href="${currentPage}"]`)?.classList.add('active');
+        document.querySelector(`.nav-links a[href="${currentPage}"]`)?.setAttribute('aria-current', 'page');
+
+        function openRegistrationForm() {
+            document.getElementById('registrationFormModal').style.display = 'block';
+        }
+
+        // 关闭注册表单 Modal
+        function closeRegistrationForm() {
+            document.getElementById('registrationFormModal').style.display = 'none';
+        }
+
+        // 提交表单前检测
+        async function preCheckRegistration() {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            try {
+                const email = document.getElementById('emailInput').value.trim();
+                const teamName = document.getElementById('teamNameInput').value.trim();
+                const teamPassword = document.getElementById('teamPasswordInput').value.trim();
+
+                if (!email || !teamName || !teamPassword) {
+                    alert("Please fill in all fields.");
+                    return;
+                }
+
+                const apiUrl = 'https://script.google.com/macros/s/AKfycbwktE-eVb6_bWHcm62x3xxswtFv-hVEl9UOE_l0YdlbaYd21KJXyDvi0C0ZldzHUkCSFw/exec?'
+                    + 'email=' + encodeURIComponent(email)
+                    + '&teamName=' + encodeURIComponent(teamName)
+                    + '&teamPassword=' + encodeURIComponent(teamPassword);
+
+                const response = await fetch(apiUrl);
+                const result = await response.text();
+                
+                if (result.includes("already been registered") || result.includes("taken") || result.includes("used")) {
+                    alert(result);
+                } else {
+                    closeRegistrationForm();
+                    openModal();
+                }
+            } catch (error) {
+                alert("An error occurred. Please try again.");
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        }
+
+        // 打开 Google Form Modal
+        function openModal() {
+            document.getElementById('formFrame').src = "https://docs.google.com/forms/d/e/1FAIpQLSfBLji0GPYMKSTuh3Nyl2x3kmtU2QHWhi4Wb2uHnh0cAqFlSQ/viewform?embedded=true";
+            document.getElementById('registrationModal').style.display = 'block';
+        }
+
+        // 关闭 Google Form Modal
+        function closeModal() {
+            document.getElementById('registrationModal').style.display = 'none';
+            document.getElementById('formFrame').src = "";
+        }
+    </script>
+</body>
+</html>

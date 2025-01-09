@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Behavior Modeling Track - WWW'25 AgentSociety Challenge</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        /* 二级标题样式 */
+        .section h2 {
+            color: #34495e;
+            font-size: 1.8em;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            position: relative;
+        }
+
+        .section h2:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, #007bff, #00ff88);
+        }
+
+        /* 三级标题样式 */
+        .section h3 {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin: 25px 0 15px;
+            padding-left: 15px;
+            border-left: 4px solid #007bff;
+        }
+
+        /* 链接样式 */
+        .section a {
+            color: #007bff;
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .section a:hover {
+            color: #0056b3;
+        }
+
+        .section a:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: #0056b3;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .section a:hover:after {
+            transform: scaleX(1);
+        }
+
+        /* 列表样式 */
+        .section ul, .section ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .section ul li, .section ol li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .section ul {
+            list-style: none;
+        }
+
+        .section ul li:before {
+            content: '•';
+            color: #007bff;
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        } 
+
+        /* 提交按钮样式 */
+        .submit-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(to right, #007bff, #00ff88);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .submit-button:hover {
+            transform: scale(1.05);
+        }
+
+        .contact-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(to right, #1a237e, #283593);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-info span {
+            white-space: nowrap;
+        }
+
+        .contact-info a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-info a:hover {
+            color: #90caf9;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <button class="submit-button" onclick="window.open('https://forms.gle/XwWbGBQZcVZp7oMr9', '_blank')">
+        Submit
+    </button>
+
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <img src="../assets/images/ASC.jpg" alt="Logo">
+            <h1>AgentSociety Challenge @ WWW 2025</h1>
+        </div>
+        <ul class="nav-links">
+          <li><a href="overview.html">Overview</a></li>
+          <li><a href="modeling-track.html">User Modeling Track</a></li>
+          <li><a href="recommendation-track.html">Recommendation Track</a></li>
+          <li><a href="leaderboards.html">Leaderboards</a></li>
+          <li><a href="submission-guidelines.html">Submission Guidelines</a></li>
+          <li><a href="discussion.html">Discussion Forum</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <section class="section" id="content">
+            <div class="user-modeling-track">
+              <h1>🧩 User Modeling Track</h1>
+
+              <h2>Introduction</h2>
+              <p>
+                  This track centers on simulating user reviews using LLM-based agents. Participants are tasked with designing and implementing LLM agents that can analyze historical user behavior records, model user preferences, and generate realistic reviews. By integrating user characteristics, item attributes, and other users’ feedback, these agents will simulate user behavior in an interactive environment. The task leverages large-scale, open-source datasets, including data from Yelp, Goodreads, and Amazon, to provide rich user-item interaction data and diverse review scenarios. Agents are set up in an interactive online platform simulator, where they can utilize tools for retrieving user information, item details, and existing reviews for decision making.
+              </p>
+          
+              <h3>Task Inputs:</h3>
+              <ul>
+                  <li><b>User ID:</b> Identifies the specific user whose behavior is being simulated.</li>
+                  <li><b>Item ID:</b> Represents the product, service, or content for which the simulated review is being generated.</li>
+              </ul>
+          
+              <h3>Task Outputs:</h3>
+              <ul>
+                  <li><b>Star/Rating:</b> A numerical score reflecting the simulated user’s overall opinion.</li>
+                  <li><b>Review Text:</b> A detailed, contextually relevant commentary informed by user preferences and item attributes.</li>
+              </ul>
+          
+              <p>
+                  This task aims to evaluate the ability of LLM agents to generate coherent and contextually appropriate reviews and preference ratings, showcasing their capacity for user behavior modeling and preference learning. By exploring the effectiveness of LLM agents in simulating user behaviors, this track contributes to advancing methodologies in behavioral modeling and offers valuable insights into improving user experience on online review platforms.
+              </p>
+          
+              <h2>Evaluation</h2>
+              <p>
+                  The performance of participants' models in simulating user interactions will be assessed through quantitative metrics, 
+                  with a focus on accuracy in predicting user behavior. 
+                  During the Development phase, we provide simulation data for development and evaluation. 
+                  After selecting the Top 20 teams to enter the Final Phase, the evaluation results will be calculated based on 40% simulation data and 60% real data. 
+                  The evaluation criteria include:
+              </p>
+          
+              <h3>Star Rating Accuracy</h3>
+              <ul>
+                  <li><b>Metric:</b> Mean Absolute Error (MAE)</li>
+                  <li><b>Description:</b> The predicted star ratings will be compared to ground truth values, normalized to the range [0,1].</li>
+                  <li><b>Formula:</b></li>
+              </ul>
+              <p>
+                  <pre>
+                  MAE = (1 / N) * Σ |s_ni_hat - s_ni|
+                  </pre>
+                  where <i>N</i> is the total number of reviews, and <i>s_ni_hat</i> and <i>s_ni</i> are the normalized predicted and ground truth star ratings, respectively. Similar evaluation method has been used in [3].
+              </p>
+          
+              <h3>Emotional Tone</h3>
+              <ul>
+                  <li>A vector of emotion scores for the top five emotions in the review text is calculated using a predefined emotion classifier model [1], with each dimension normalized to the range [0,1].</li>
+                  <li><b>Metric:</b> Mean Absolute Error (MAE) of normalized emotion scores, reflecting the deviation from the actual emotions.</li>
+              </ul>
+          
+              <h3>Sentiment Attitude</h3>
+              <ul>
+                  <li>The sentiment attitude of the review text is analyzed using <i>nltk.sentiment.SentimentIntensityAnalyzer()</i>, with the resulting value normalized to the range [0,1].</li>
+                  <li><b>Metric:</b> Mean Absolute Error (MAE) of normalized sentiment scores, indicating the deviation from actual sentiment attitude.</li>
+              </ul>
+          
+              <h3>Topic Relevance</h3>
+              <ul>
+                  <li>An embedding vector for the review text is generated using a predefined embedding model [2].</li>
+                  <li><b>Metric:</b> Cosine similarity between text embeddings, measuring alignment with the real topics.</li>
+              </ul>
+          
+              <h3>References</h3>
+              <ol>
+                  <li>Barbieri, F., et al, "TweetEval: Unified Benchmark and Comparative Evaluation for Tweet Classification," in <i>Proceedings of Findings of EMNLP</i>, 2020.</li>
+                  <li>N. Reimers, I. Gurevych, "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks," in <i>Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing</i>, 2019.</li>
+                  <li>Wang, Yancheng, et al. "RecMind: Large Language Model Powered Agent For Recommendation." <i>Findings of the Association for Computational Linguistics: NAACL 2024</i>, 2024.</li>
+              </ol>
+              
+              <p>
+                Checkout <a href="https://github.com/tsinghua-fib-lab/WebSocietySimulator/blob/main/websocietysimulator/tools/evaluation_tool.py" target="_blank">User Behavior Modeling Evaluation</a> for more calculation details.
+              </p>
+              </div>              
+        </section>
+    </main>
+
+    <script>
+        // 获取当前页面的文件名
+        const currentPage = window.location.pathname.split('/').pop();
+        
+        // 移除所有导航链接的active类
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.classList.remove('active');
+            link.removeAttribute('aria-current');
+        });
+        
+        // 为当前页面的导航链接添加active类
+        document.querySelector(`.nav-links a[href="${currentPage}"]`)?.classList.add('active');
+        document.querySelector(`.nav-links a[href="${currentPage}"]`)?.setAttribute('aria-current', 'page');
+    </script>
+</body>
+</html> 

@@ -1,0 +1,249 @@
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f7fa;
+    display: flex;
+}
+
+/* 侧边栏样式 */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: linear-gradient(180deg, #1a237e, #0d47a1);
+    color: white;
+    padding: 2rem 0;
+    overflow-y: auto;
+}
+
+.sidebar-logo {
+    padding: 0 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.sidebar-logo img {
+    width: 180px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.sidebar-logo h1 {
+    font-size: 1.2rem;
+    color: white;
+    margin: 0;
+}
+
+.nav-links {
+    list-style: none;
+}
+
+.nav-links li {
+    margin-bottom: 0.5rem;
+}
+
+.nav-links a {
+    display: block;
+    padding: 0.8rem 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    border-left: 4px solid transparent;
+}
+
+.nav-links a:hover,
+.nav-links a[aria-current="page"] {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 主要内容区域 */
+.main-content {
+    margin-left: 280px;
+    padding: 2rem;
+    width: calc(100% - 280px);
+}
+
+.section {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 2rem;
+}
+
+/* 标题样式 */
+.section h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #2c3e50;
+    font-size: 2.2em;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.section h1:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(to right, #007bff, #00ff88);
+    border-radius: 2px;
+}
+
+/* 添加标题前的图标 */
+.section h1:before {
+    margin-right: 15px;
+    font-size: 0.9em;
+    animation: trophy-shine 2s infinite;
+}
+
+/* 添加图标动画效果 */
+@keyframes trophy-shine {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 240px;
+    }
+    
+    .main-content {
+        margin-left: 240px;
+        width: calc(100% - 240px);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 1rem;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+    
+    .section {
+        padding: 1rem;
+    }
+    
+    .dataTables_wrapper {
+        padding: 15px;
+    }
+    
+    table.dataTable thead th,
+    table.dataTable tbody td {
+        padding: 10px 5px;
+        font-size: 0.9em;
+    }
+} 
+
+/* 表格样式优化 */
+table.dataTable tbody tr:nth-child(even) {
+    background-color: #f8faff;
+}
+
+table.dataTable thead th {
+    background: linear-gradient(180deg, #f8f9fa, #e9ecef);
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 15px 12px;
+    position: relative;
+}
+
+table.dataTable thead th:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #007bff, #00ff88);
+    opacity: 0.5;
+}
+
+/* 数值列样式优化 */
+table.dataTable tbody td.error-value,
+table.dataTable tbody td.hr-value {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
+    background: rgba(0, 123, 255, 0.03);
+}
+
+/* 团队名称列样式 */
+table.dataTable tbody td.team-name {
+    font-weight: 600;
+    color: #2c3e50;
+    background: linear-gradient(90deg, rgba(0, 123, 255, 0.05), transparent);
+    border-left: 3px solid #007bff;
+}
+
+/* 提交时间列样式 */
+table.dataTable tbody td.submission-time {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* 鼠标悬停效果 */
+table.dataTable tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05) !important;
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 表头图标样式优化 */
+.header-icon {
+    margin-right: 8px;
+    font-size: 1.2em;
+    vertical-align: middle;
+    opacity: 0.8;
+}
+
+/* 分页按钮样式优化 */
+.dataTables_paginate .paginate_button {
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.dataTables_paginate .paginate_button.current {
+    background: linear-gradient(45deg, #007bff, #00ff88) !important;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+} 
+
+.behavior-title:before {
+    content: '🎯';
+}
+
+.recommendation-title:before {
+    content: '🏆';
+} 
