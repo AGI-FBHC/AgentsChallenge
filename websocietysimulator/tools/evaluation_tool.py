@@ -136,6 +136,10 @@ class SimulationEvaluator(BaseEvaluator):
         # Calculate star error
         simulated_stars = [item['stars'] for item in simulated_data]
         real_stars = [item['stars'] for item in real_data]
+        print("接下来将打印真实评分和虚拟")
+        print(real_stars)
+        print(simulated_stars)
+
         star_error = 0
         for sim_star, real_star in zip(simulated_stars, real_stars):
             if sim_star > 5:
@@ -145,6 +149,8 @@ class SimulationEvaluator(BaseEvaluator):
             star_error += abs(sim_star - real_star) / 5
         star_error = star_error / len(real_stars)
         preference_estimation = 1 - star_error
+        print("星级得分")
+        print(preference_estimation)
 
         # Calculate review metrics
         simulated_reviews = [item['review'] for item in simulated_data]
@@ -191,6 +197,10 @@ class SimulationEvaluator(BaseEvaluator):
             topic_error_single = distance.cosine(embeddings[0], embeddings[1]) / 2
             topic_error.append(topic_error_single)
 
+            print("接下来将打印真正评论和虚拟")
+            print(real_review)
+            print(simulated_review)
+
         # Emotion analysis
         for i in range(len(simulated_reviews)):
             if len(simulated_reviews[i]) > 300:
@@ -206,6 +216,10 @@ class SimulationEvaluator(BaseEvaluator):
         sentiment_error = np.mean(sentiment_error)
         emotion_error = np.mean(emotion_error)
         topic_error = np.mean(topic_error)
+
+        print(sentiment_error)
+        print(emotion_error)
+        print(topic_error)
         return {
             'sentiment_error': sentiment_error,
             'emotion_error': emotion_error,

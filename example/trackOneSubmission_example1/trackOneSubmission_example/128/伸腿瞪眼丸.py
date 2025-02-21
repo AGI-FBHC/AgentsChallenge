@@ -1,4 +1,3 @@
-from websocietysimulator import Simulator
 from websocietysimulator.agent import SimulationAgent
 from websocietysimulator.llm import LLMBase, InfinigenceLLM
 from websocietysimulator.agent.modules.planning_modules import PlanningBase
@@ -11,7 +10,7 @@ import random
 import re
 import json
 import logging
-import threading
+
 logging.basicConfig(level=logging.INFO)
 
 # 设置日志文件路径
@@ -130,15 +129,18 @@ class MySimulationAgent(SimulationAgent):
 
         Your response must be in **two paragraphs** with an **objective tone**:
 
-        - **Paragraph One (~120 tokens):**
+        - **Paragraph One (~150 tokens):**
           - Write in the **second person** to portray the user，refer to User Review History and User Information.
-          - Include details on activity level (such as how many reviews you have contributed), reviewing style or preferences, sentiment (positive, negative, or neutral), and any notable rating patterns.
+            1. The user's tone and language (e.g., formal, casual, critical, humorous).
+            2. Common themes or topics the user frequently comments on (e.g., food quality, service, atmosphere).
+            3. The level of detail in the reviews (e.g., whether they provide specific examples or remain general).
+            4. The user's sentiment (e.g., balanced, overly positive, overly negative).
+            5. Any patterns in the user's ratings (e.g., tends to give moderate scores, extremes, or consistent ratings).
+            6. How the user evaluates positives and negatives in the experience.
           - Maintain a factual, objective tone without being overly personal or casual.
-          - Additionally, please clarify how the user tends to rate their experience with star ratings and provide an explanation.
-
         - **Paragraph Two (~380 tokens total):**
           - First (~80 tokens): Provide a concise description of the business. Mention its name, location (address, city, state), type of business, star rating, approximate number of reviews (preferably in words), and key attributes.You need to pay attention to mention the star rating of this merchant.
-          - Next (~300 tokens): Summarize the overall advantages and disadvantages of the product based on the reviews. Focus on the key strengths and weaknesses observed, highlighting consistent points of praise or criticism. Ensure the tone is neutral. Keep the tone balanced and avoid repetitive details.
+          - Next (~300 tokens): Summarize the overall sentiment and recurring themes in the reviews, including positive and negative feedback. Highlight major strengths and weaknesses observed, and indicate any consistent praise or complaints. Keep the tone balanced and avoid repetitive details.
 
         **Important**: Do not include any headings or labels like “Task 1” or “Task 2” in your final response. Simply produce two paragraphs in the specified order, each fulfilling the respective requirements.
         """
@@ -179,6 +181,7 @@ class MySimulationAgent(SimulationAgent):
 
             # 如果reasoning成功，尝试提取stars和review
             if success:
+                logging.info(f"提取的结果: {result}")
                 try:
                     # 提取包含stars和review的行
                     stars_line = next(line for line in result.split('\n') if 'stars:' in line)
@@ -187,6 +190,7 @@ class MySimulationAgent(SimulationAgent):
 
                     # 提取stars的数值并强制转换为整数
                     stars_value = float(stars_line.split(':')[1].strip())  # 将stars值转换为整数
+                    logging.info(f"提取的评分：{stars_value}")
 
                     return stars_value, review_text  # 返回整数评分和评论
                 except StopIteration:
@@ -207,120 +211,84 @@ class MySimulationAgent(SimulationAgent):
         """
         Simulate user behavior
         Returns:
-            dict: {"stars": float, "review": str}
+            tuple: (star (float), useful (float), funny (float), cool (float), review_text (str))
         """
-        # 用于存放线程中返回的结果
-        result_container = {}
+        try:
+            user_id = self.task.get('user_id')
+            item_id = self.task.get('item_id')
 
-        def _workflow_logic():
-            try:
-                user_id = self.task.get('user_id')
-                item_id = self.task.get('item_id')
+            # 获取相关评论
+            item_reviews = self.interaction_tool.get_reviews(item_id=item_id)
+            user_reviews = self.interaction_tool.get_reviews(user_id=user_id)
+            user_info = self.interaction_tool.get_user(user_id=user_id)
+            item_info = self.interaction_tool.get_item(item_id=item_id)
+            # 随机选择一些评论以供参考
+            # random_item_reviews = random.sample(item_reviews, min(len(item_reviews), 5))
+            random_user_reviews = random.sample(user_reviews, min(len(user_reviews), 3))
 
-                # 获取相关评论
-                item_reviews = self.interaction_tool.get_reviews(item_id=item_id)
-                user_reviews = self.interaction_tool.get_reviews(user_id=user_id)
-                user_info = self.interaction_tool.get_user(user_id=user_id)
-                item_info = self.interaction_tool.get_item(item_id=item_id)
-                # 随机选择一些评论以供参考
-                random_user_reviews = random.sample(user_reviews, min(len(user_reviews), 3))
-                print(f"User Info: {user_info}")
-                print(f"User Reviews: {user_reviews}")
-                print(f"Item Info: {item_info}")
-                print(f"Item Reviews: {item_reviews}")
-                input('rrrr')
-                # 获取用户来源信息
-                source = user_info.get('source', '')
-                # 生成组合描述
-                com = self.generate_combined_description(user_info, item_info, item_reviews, user_reviews, source)
-                if "无法回答" in com:
-                    com = self.generate_combined_description(user_info, item_info, item_reviews, user_reviews, source)
-                task_description = f'''
-                        You are a real human user on {source} dataset, a platform for crowd-sourced business reviews,Your task is to write a review for a business described below. The first paragraph is a description of you and your past behavior, while the second paragraph describes the product you need to evaluate, along with some feedback you have received in the past: 
-                        ***{com}***
-                            ##Here are some of the your past reviews of other businesses,You must simulate new reviews that match the tone, word choice, and structure of these.Attention!!! Ensure the new reviews are consistent with your past style while sounding natural and authentic.:{random_user_reviews}###
-                            You need to write a review for this business,
-                            Please analyze the following aspects carefully:
-                            1. Based on your user profile and review style, what rating would you give this business? Remember that many users give 5-star ratings for excellent experiences that exceed expectations.
-                            2. Given the business details and your past experiences, what specific aspects would you comment on? Focus on the positive aspects that make this business stand out or negative aspects that severely impact the experience.
-                            Requirements:
-                            - Attention, Attention.You must be objective when scoring, and not just give high scores blindly.
-                            - Star rating must be one of: 1.0, 2.0, 3.0, 4.0, 5.0
-                            - Attention: Please be cautious when giving 5 stars, unless the experience exceeds expectations.
-                            - If the business fails significantly in key areas, consider giving a 1-star rating
-                            - Review text should be 4-5 sentences, focusing on your personal experience and emotional response,Review are about 100 tokens.
-                            - Maintain consistency with your historical review style and rating patterns.
-                            - Please provide an objective evaluation of the star rating, do not add extra stars out of friendliness.
-                            Comments must meet the following requirements:
-                            1. Topic Relevance:"reflects the overall user evaluation of the merchant. You must specify the subject of your comment. The review must include the name of the business.You must specify the subject of your comment."
-                            2. Sentiment Attitude:"Generate a review that reflects positive or negative sentiment based on product quality and ensures alignment with overall user feedback."
-                            3. Emotional Tone:"express your initial emotion or feeling about the experience in front of the sentence. The emotion should be placed right after the business name and before describing the specifics of your experience. Be sure to include your overall evaluation of the business."
+            # 获取用户来源信息
+            source = user_info.get('source', '')
+            # after_user_info = self.generate_user_description(user_info, source)
+            # item_description = self.generate_item_description(item_info, source)
+            # = self.generate_item_review_description(item_reviews, source)
+            # user_reviews_text = self.generate_user_review_description(user_reviews, source)
+            com = self.generate_combined_description(user_info, item_info, item_reviews, user_reviews, source)
+            task_description = f'''
+        You are a user on {source}, a platform for crowd-sourced business reviews. Your task is to write a review for the business described below. The first paragraph will describe your user profile and past review behavior, and the second paragraph will introduce the business you need to evaluate, along with feedback from other users:
 
-                            Format your response exactly as follows:
-                            stars: [your rating]
-                            review: [your review]
-                        '''
-                stars, review_text = self.extract_review(task_description)
+        {com}
+        
+        Here are some of the user's past reviews of other businesses, which you can use to simulate the user's review style:
+        {random_user_reviews}
+        
+        Instructions:
+        Based on your user profile and historical review style, provide a rating for this business.
+        
+        Many users give a 5-star rating for experiences that exceed expectations, so be cautious when giving a 5-star rating. It should be reserved for experiences that truly stand out.
+        Avoid giving 1-star ratings unless absolutely necessary.
+        The star rating must be one of: 1.0, 2.0, 3.0, 4.0, or 5.0.
+        After analyzing the business details and your past experiences, focus on the aspects that make this business stand out—positively or negatively. Consider:
+        
+        The overall user sentiment based on the feedback provided.
+        Key points like service quality, product effectiveness, and customer satisfaction.
+        Review Requirements:
+        The review should be 3-4 sentences (around 200 tokens).
+        Your tone should match the emotional response based on your experience.
+        Ensure the review remains objective: Do not give stars just out of friendliness or convenience.
+        Your review should include specific details about your experience and why you’re rating the business the way you are.
+        Comments Must Include:
+        Topic Relevance: The review must reflect your overall evaluation of the business and include the business name. It should focus on specific aspects of your experience with that business.
+        Sentiment: The review should reflect either a positive or negative sentiment, depending on your experience and the business details.
+        Emotional Tone: Begin with a clear emotional response to your experience, followed by a description of the service/product quality.
+        Format Your Response Exactly as Follows:
+        stars: [your rating]
+        review: [your review]
+        '''
+            stars, review_text = self.extract_review(task_description)
 
-                if len(review_text) > 512:
-                    review_text = review_text[:512]
+            if len(review_text) > 512:
+                review_text = review_text[:512]
 
-
-                if stars and review_text:
-                    result_container['result'] = {
-                        "stars": stars,
-                        "review": review_text
-                    }
-                else:
-                    result_container['result'] = {
-                        "stars": 3,
-                        "review": "The product meets basic expectations and serves its intended purpose. While it doesn't stand out in terms of exceptional quality or features, it provides decent value for the price. Overall, it is a reliable option for everyday use. I would recommend it to those looking for a practical solution without premium expectations."
-                    }
-            except Exception as e:
-                print(f"Error in workflow: {e}")
-                result_container['result'] = {
+            """logging.info("one: %s", after_user_info)
+            logging.info("two: %s", item_description)
+            logging.info("two: %s",item_info)
+            logging.info("three: %s", user_reviews_text)
+            logging.info("four: %s", item_reviews_text)"""
+            logging.info("one:%s", com)
+            if stars and review_text:
+                return {
+                    "stars": stars,
+                    "review": review_text
+                }
+            else:
+                return {
                     "stars": 3,
                     "review": "The product meets basic expectations and serves its intended purpose. While it doesn't stand out in terms of exceptional quality or features, it provides decent value for the price. Overall, it is a reliable option for everyday use. I would recommend it to those looking for a practical solution without premium expectations."
                 }
 
-        # 将整个工作流程放入线程中执行
-        t = threading.Thread(target=_workflow_logic)
-        t.start()
-        # 等待最多 60 秒
-        t.join(timeout=85)
-        if t.is_alive():
-            print("Workflow exceeded 60 seconds, returning default value.")
+        except Exception as e:
+            print(f"Error in workflow: {e}")
             return {
                 "stars": 3,
                 "review": "The product meets basic expectations and serves its intended purpose. While it doesn't stand out in terms of exceptional quality or features, it provides decent value for the price. Overall, it is a reliable option for everyday use. I would recommend it to those looking for a practical solution without premium expectations."
             }
-        else:
-            return result_container.get('result', {
-                "stars": 3,
-                "review": "The product meets basic expectations and serves its intended purpose. While it doesn't stand out in terms of exceptional quality or features, it provides decent value for the price. Overall, it is a reliable option for everyday use. I would recommend it to those looking for a practical solution without premium expectations."
-            })
-
-
-if __name__ == "__main__":
-    # Set the data
-    task_set = "yelp"  # "goodreads" or "yelp"
-    simulator = Simulator(data_dir="/home/zhaorh/code/AgentSociety/home/zhaorh/code/AgentSociety/dataout", device="gpu",
-                          cache=True)
-    simulator.set_task_and_groundtruth(task_dir=f"./track1/{task_set}/tasks",
-                                       groundtruth_dir=f"./track1/{task_set}/groundtruth")
-
-    # Set the agent and LLM
-    simulator.set_agent(MySimulationAgent)
-    simulator.set_llm(InfinigenceLLM(api_key="sk-dakgi4qrepc5btp2"))
-
-    # Run the simulation
-    # If you don't set the number of tasks, the simulator will run all tasks.
-    outputs = simulator.run_simulation(number_of_tasks=40, enable_threading=True, max_workers=2)
-
-    # Evaluate the agent
-    evaluation_results = simulator.evaluate()
-    with open(f'./evaluation_results_track1_{task_set}.json', 'w') as f:
-        json.dump(evaluation_results, f, indent=4)
-
-    # Get evaluation history
-    evaluation_history = simulator.get_evaluation_history()
