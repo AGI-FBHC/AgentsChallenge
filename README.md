@@ -1,5 +1,5 @@
 <div style="text-align: center; display: flex; align-items: center; justify-content: center; background-color: white; padding: 20px; border-radius: 30px;">
-  <img src="./static/ASC.jpg" alt="AgentSociety Challenge Logo" width="100" style="margin-right: 20px; border-radius: 10%;">
+  <p align="center"><img src="./static/ASC.jpg" alt="AgentSociety Challenge Logo" width="100" style="margin-right: 20px; border-radius: 10%;"></p>
   <h1 style="color: black; margin: 0; font-size: 2em;">WWW'25 AgentSociety Challenge: WebSocietySimulator</h1>
 </div>
 
@@ -8,6 +8,10 @@
 [![Competition Link](https://img.shields.io/badge/competition-link-orange)](https://www.codabench.org/competitions/4574/)
 
 Welcome to the **WWW'25 AgentSociety Challenge**! This repository provides the tools and framework needed to participate in a competition that focuses on building **LLM Agents** for **user behavior simulation** and **recommendation systems** based on open source datasets.
+
+<p align="center">
+<img src="data_images/WWW_25 AgentSociety Challenge 3rd place.jpg" width=100% />
+</p>
 
 Participants are tasked with developing intelligent agents that interact with a simulated environment and perform specific tasks in two competition tracks:
 1. **User Behavior Simulation Track**: Agents simulate user behavior, including generating reviews and ratings.
